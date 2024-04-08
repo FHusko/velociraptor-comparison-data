@@ -41,7 +41,6 @@ SNIa_err = unyt.unyt_array(
     ],
     units="yr**(-1) * Msun**(-1)",
 )
-print(SNIa_err)
 dMstar = 0.5 / 2.0
 Mstar_err = unyt.unyt_array(
     [
