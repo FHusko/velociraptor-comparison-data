@@ -80,7 +80,7 @@ for galaxy_type, output_filename in zip(galaxy_types, output_filenames):
     name = f"Black hole mass - stellar mass relation ({galaxy_type} galaxies)"
     plot_as = "points"
     # We purposely make this data show up not only a z=0 but also at higher z
-    redshift_lower, redshift_upper = -0.1, 3.1
+    redshift_lower, redshift_upper = -0.1, 0.5
     redshift = 0.0
     h = h_sim
 

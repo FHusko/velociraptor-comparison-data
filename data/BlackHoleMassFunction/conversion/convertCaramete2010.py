@@ -43,7 +43,7 @@ comment = (
     " The units of black hole masses are Msol. The units of the black hole mass"
     " function are Mpc^-3 dex^-1."
 )
-citation = "Caramete et al. (2010)"
+citation = "Caramete et al. (2010) (Mbh - Mbulge)"
 bibcode = "2010A&A...521A..55C"
 name = "Black Hole Mass Function"
 plot_as = "points"

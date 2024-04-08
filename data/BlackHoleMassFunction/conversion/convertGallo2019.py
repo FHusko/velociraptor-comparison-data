@@ -9,10 +9,10 @@ import sys
 with open(sys.argv[1], "r") as handle:
     exec(handle.read())
 
-input_filename = "../raw/MerloniHeinz2008.txt"
+input_filename = "../raw/Gallo2019.txt"
 delimiter = None
 
-output_filename = "MerloniHeinz2008_Data.hdf5"
+output_filename = "Gallo2019_Data.hdf5"
 output_directory = "../"
 
 if not os.path.exists(output_directory):
@@ -21,37 +21,30 @@ if not os.path.exists(output_directory):
 processed = ObservationalData()
 
 # Read the data (only those columns we need here)
-raw = np.loadtxt(input_filename, delimiter=delimiter, usecols=(0, 1, 2, 3, 4))
+raw = np.loadtxt(input_filename, delimiter=delimiter, usecols=(0, 1, 2))
 
 M_BH = 10 ** raw[:, 0] * unyt.Solar_Mass
-M_BH_low = 10 ** (raw[:, 0] - raw[:, 2]) * unyt.Solar_Mass
-M_BH_high = 10 ** (raw[:, 0] + raw[:, 1]) * unyt.Solar_Mass
 
-Phi = 10 ** raw[:, 3] / unyt.Mpc ** 3
-Phi_low = 10 ** (raw[:, 3] - raw[:, 4]) / unyt.Mpc ** 3
-Phi_high = 10 ** (raw[:, 3] + raw[:, 4]) / unyt.Mpc ** 3
+Phi = 10 ** raw[:, 1] / unyt.Mpc ** 3
+Phi_low = 10 ** (raw[:, 1] - raw[:, 2]) / unyt.Mpc ** 3
+Phi_high = 10 ** (raw[:, 1] + raw[:, 2]) / unyt.Mpc ** 3
 
 # Define the scatter as offset from the mean value
-x_scatter = unyt.unyt_array((M_BH - M_BH_low, M_BH_high - M_BH))
 y_scatter = unyt.unyt_array((Phi - Phi_low, Phi_high - Phi))
 
 comment = (
-    " The black hole mass function estimate taken from Merloni & Heinz (2008):"
-    " 2008MNRAS.388.1011M.."
-    " These estimates are based on convolving the observed relation between"
-    " black hole mass and luminosity with the luminosity function."
-    " The units of black hole masses are Msol. The units of the black hole mass"
-    " function are Mpc^-3 dex^-1."
+    "The black hole mass function estimate taken from Gallo et al. (2019):"
+    " 2019ApJ...883L..18G # These estimates are based on black hole"
+    " occupation fractions as determined from X-ray detections. The units"
+    " of the BH mass function are Mpc^-3 dex^-1."
 )
-citation = "Merloni & Heinz (2008) (Mbh - Lbulge)"
-bibcode = "2008MNRAS.388.1011M."
+citation = "Gallo et al. (2019) (X-ray occupation fractions)"
+bibcode = "2019ApJ...883L..18G"
 name = "Black Hole Mass Function"
 plot_as = "points"
 redshift = 0.0
 
-processed.associate_x(
-    M_BH, scatter=x_scatter, comoving=False, description="Black hole mass"
-)
+processed.associate_x(M_BH, scatter=None, comoving=False, description="Black hole mass")
 processed.associate_y(
     Phi, scatter=y_scatter, comoving=False, description="Black hole mass function"
 )

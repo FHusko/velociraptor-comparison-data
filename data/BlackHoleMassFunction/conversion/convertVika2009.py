@@ -46,7 +46,7 @@ comment = (
     " The units of black hole masses are Msol. The units of the black hole mass"
     " function are 10^-4 h^3 Mpc^-3 dex^-1."
 )
-citation = "Vika et al. (2009)"
+citation = "Vika et al. (2009) (Mbh - continuity equation)"
 bibcode = "2009MNRAS.400.1451V"
 name = "Black Hole Mass Function"
 plot_as = "points"
