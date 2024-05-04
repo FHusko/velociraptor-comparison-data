@@ -63,18 +63,18 @@ Phi_scatter = [Phi_Mstar_observed_scatter, Phi_Mstar_unbiased_scatter, None, Non
 
 comment = (
     " The black hole mass function estimate taken from Shankar et al. (2016):"
-    " 2020NatAs...4..282S.These estimates are based on convolving the observed"
+    " 2016MNRAS.460.3119S.These estimates are based on convolving the observed"
     " relation between black hole mass and stellar mass or stellar velocity"
     " dispersion, with the probability density function (mass function) of"
     " those two quantities. The units of black hole masses are Msol. The units"
     " of the black hole mass function are Mpc^-3 dex^-1."
 )
 name = "Black Hole Mass Function"
-bibcode = "2020NatAs...4..282S"
+bibcode = "2016MNRAS.460.3119S"
 redshift = 0.0
 
 for i in range(4):
-    citation = "Shankar et al. (2020) " + citations[i]
+    citation = "Shankar et al. (2016) " + citations[i]
 
     if i < 2:
         plot_as = "points"

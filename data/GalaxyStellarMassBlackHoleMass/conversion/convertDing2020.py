@@ -19,40 +19,15 @@ delimiter = " "
 output_filename = "Ding2020.hdf5"
 output_directory = "../"
 
-log_M_star, log_M_star_err_neg, log_M_star_err_pos, log_M_bh, log_M_bh_err = (
-    [],
-    [],
-    [],
-    [],
-    [],
-)
-with open(input_filename, "r") as file:
-    rows = file.readlines()[1:]
-    for row in rows:
-        try:
-            elements = row.split("\t")
-            star_mass, star_mass_err_neg, star_mass_err_pos, bh_mass = (
-                elements[2],
-                elements[3],
-                elements[4],
-                elements[5].strip("\n"),
-            )
+# Load data
+input_file = np.genfromtxt(input_filename, comments="#")
+log_M_star = input_file[:, 2]
+log_M_star_err_neg = -1 * input_file[:, 3]
+log_M_star_err_pos = input_file[:, 4]
+log_M_bh = input_file[:, 5]
 
-            log_M_bh.append(float(bh_mass))
-            # Assume constant BH mass uncertainty of 0.4 dex
-            log_M_bh_err.append(0.4)
-            log_M_star.append(float(star_mass))
-            log_M_star_err_neg.append(-1 * float(star_mass_err_neg))
-            log_M_star_err_pos.append(float(star_mass_err_pos))
-        except ValueError:
-            pass
-
-log_M_bh, log_M_star = np.array(log_M_bh), np.array(log_M_star)
-log_M_bh_err, log_M_star_err_neg, log_M_star_err_pos = (
-    np.array(log_M_bh_err),
-    np.array(log_M_star_err_neg),
-    np.array(log_M_star_err_pos),
-)
+# Assume constant 0.4 dex uncertainty for BH mass
+log_M_bh_err = 0.4 * np.ones(np.size(log_M_bh))
 
 M_bh = unyt.unyt_array(np.power(10.0, log_M_bh), units="Msun")
 M_star = unyt.unyt_array(np.power(10.0, log_M_star), units="Msun")
@@ -72,7 +47,8 @@ if not os.path.exists(output_directory):
 
 comment = (
     f"A (black hole mass)-(galaxy stellar mass) relation based on observed "
-    f"AGN with broad lines."
+    f"AGN with broad lines. A constant BH mass uncertainty of 0.4 dex was "
+    "assumed as appropriate for broad line estimates."
 )
 citation = f"Ding et al. (2020) (BL-AGN)"
 bibcode = "2020ApJ...888...37D"

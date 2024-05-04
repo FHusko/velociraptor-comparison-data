@@ -19,28 +19,12 @@ delimiter = " "
 output_filename = "Schramm2013.hdf5"
 output_directory = "../"
 
-log_M_star, log_M_star_err, log_M_bh, log_M_bh_err = [], [], [], []
-with open(input_filename, "r") as file:
-    rows = file.readlines()[1:]
-    for row in rows:
-        try:
-            elements = row.split("\t")
-            star_mass, bh_mass, star_mass_err, bh_mass_err = (
-                elements[1],
-                elements[2],
-                elements[3],
-                elements[4].strip("\n"),
-            )
-
-            log_M_bh.append(float(bh_mass))
-            log_M_bh_err.append(float(bh_mass_err))
-            log_M_star.append(float(star_mass))
-            log_M_star_err.append(float(star_mass_err))
-        except ValueError:
-            pass
-
-log_M_bh, log_M_star = np.array(log_M_bh), np.array(log_M_star)
-log_M_bh_err, log_M_star_err = np.array(log_M_bh_err), np.array(log_M_star_err)
+# Load data
+input_file = np.genfromtxt(input_filename, comments="#")
+log_M_star = input_file[:, 1]
+log_M_star_err = input_file[:, 3]
+log_M_bh = input_file[:, 2]
+log_M_bh_err = input_file[:, 4]
 
 M_bh = unyt.unyt_array(np.power(10.0, log_M_bh), units="Msun")
 M_star = unyt.unyt_array(np.power(10.0, log_M_star), units="Msun")

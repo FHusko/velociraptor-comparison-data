@@ -1,5 +1,5 @@
 # The black hole mass function estimate taken from Shankar et al. (2016):
-# 2020NatAs...4..282S
+# 2016MNRAS.460.3119S
 # These estimates are based on convolving the observed relation between
 # black hole mass and stellar mass or stellar velocity dispersion, with the
 # probability density function (mass function) of those two quantities.
