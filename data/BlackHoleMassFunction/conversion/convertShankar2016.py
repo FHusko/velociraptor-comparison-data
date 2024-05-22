@@ -9,6 +9,10 @@ import sys
 with open(sys.argv[1], "r") as handle:
     exec(handle.read())
 
+# Cosmology
+h_obs = 0.7
+h_sim = cosmology.h
+
 input_filename = "../raw/Shankar2016.txt"
 delimiter = None
 
@@ -36,16 +40,24 @@ raw = np.loadtxt(input_filename, delimiter=delimiter, usecols=(0, 1, 2, 3, 4, 5,
 
 M_BH = 10 ** raw[:, 0] * unyt.Solar_Mass
 
-Phi_Mstar_observed = 10 ** raw[:, 1] / unyt.Mpc ** 3
-Phi_Mstar_unbiased = 10 ** raw[:, 3] / unyt.Mpc ** 3
-Phi_sigma_observed = 10 ** raw[:, 5] / unyt.Mpc ** 3
-Phi_sigma_unbiased = 10 ** raw[:, 6] / unyt.Mpc ** 3
+Phi_Mstar_observed = 10 ** raw[:, 1] / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+Phi_Mstar_unbiased = 10 ** raw[:, 3] / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+Phi_sigma_observed = 10 ** raw[:, 5] / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+Phi_sigma_unbiased = 10 ** raw[:, 6] / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
 Phis = [Phi_Mstar_observed, Phi_Mstar_unbiased, Phi_sigma_observed, Phi_sigma_unbiased]
 
-Phi_Mstar_observed_high = 10 ** (raw[:, 1] + raw[:, 2]) / unyt.Mpc ** 3
-Phi_Mstar_observed_low = 10 ** (raw[:, 1] - raw[:, 2]) / unyt.Mpc ** 3
-Phi_Mstar_unbiased_high = 10 ** (raw[:, 3] + raw[:, 4]) / unyt.Mpc ** 3
-Phi_Mstar_unbiased_low = 10 ** (raw[:, 3] - raw[:, 4]) / unyt.Mpc ** 3
+Phi_Mstar_observed_high = (
+    10 ** (raw[:, 1] + raw[:, 2]) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+)
+Phi_Mstar_observed_low = (
+    10 ** (raw[:, 1] - raw[:, 2]) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+)
+Phi_Mstar_unbiased_high = (
+    10 ** (raw[:, 3] + raw[:, 4]) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+)
+Phi_Mstar_unbiased_low = (
+    10 ** (raw[:, 3] - raw[:, 4]) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+)
 
 Phi_Mstar_observed_scatter = unyt.unyt_array(
     (
@@ -67,7 +79,8 @@ comment = (
     " relation between black hole mass and stellar mass or stellar velocity"
     " dispersion, with the probability density function (mass function) of"
     " those two quantities. The units of black hole masses are Msol. The units"
-    " of the black hole mass function are Mpc^-3 dex^-1."
+    " of the black hole mass function are Mpc^-3 dex^-1. An h-correction was"
+    f" applied from h=0.7 to a {cosmology.name} cosmology. "
 )
 name = "Black Hole Mass Function"
 bibcode = "2016MNRAS.460.3119S"

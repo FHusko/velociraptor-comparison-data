@@ -9,6 +9,10 @@ import sys
 with open(sys.argv[1], "r") as handle:
     exec(handle.read())
 
+# Cosmology
+h_obs = 0.7
+h_sim = cosmology.h
+
 input_filename = "../raw/Marconi2004.txt"
 delimiter = None
 
@@ -27,9 +31,9 @@ M_BH = 10 ** raw[:, 0] * unyt.Solar_Mass
 M_BH_low = 10 ** (raw[:, 0] - raw[:, 2]) * unyt.Solar_Mass
 M_BH_high = 10 ** (raw[:, 0] + raw[:, 1]) * unyt.Solar_Mass
 
-Phi = 10 ** raw[:, 3] / unyt.Mpc ** 3
-Phi_low = 10 ** (raw[:, 3] - raw[:, 4]) / unyt.Mpc ** 3
-Phi_high = 10 ** (raw[:, 3] + raw[:, 4]) / unyt.Mpc ** 3
+Phi = 10 ** raw[:, 3] / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+Phi_low = 10 ** (raw[:, 3] - raw[:, 4]) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+Phi_high = 10 ** (raw[:, 3] + raw[:, 4]) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
 
 # Define the scatter as offset from the mean value
 x_scatter = unyt.unyt_array((M_BH - M_BH_low, M_BH_high - M_BH))
@@ -44,7 +48,8 @@ comment = (
     " bulge velocity dispersion. The estimates given here encompass all of the"
     " mentioned inferred black hole mass function estimates, within the error bars."
     " The units of black hole masses are Msol. The units of the black hole mass"
-    " function are Mpc^-3 dex^-1."
+    " function are Mpc^-3 dex^-1. An h-correction was applied from"
+    f" h=0.7 to a {cosmology.name} cosmology."
 )
 citation = "Marconi et al. (2004)"
 bibcode = "2004MNRAS.351..169M"

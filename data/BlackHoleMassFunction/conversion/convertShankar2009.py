@@ -9,6 +9,10 @@ import sys
 with open(sys.argv[1], "r") as handle:
     exec(handle.read())
 
+# Cosmology
+h_obs = 0.7
+h_sim = cosmology.h
+
 input_filename = "../raw/Shankar2009.txt"
 delimiter = None
 
@@ -29,9 +33,13 @@ M_BH_high = 10 ** (raw[:, 0] + raw[:, 1]) * unyt.Solar_Mass
 
 # We divide by black hole mass since the data given in Shankar et al. (2009) is not
 # in the form of the usual mass function.
-Phi = 10 ** raw[:, 3] / (M_BH / unyt.Solar_Mass) / unyt.Mpc ** 3
-Phi_low = 10 ** (raw[:, 5]) / (M_BH / unyt.Solar_Mass) / unyt.Mpc ** 3
-Phi_high = 10 ** (raw[:, 4]) / (M_BH / unyt.Solar_Mass) / unyt.Mpc ** 3
+Phi = 10 ** raw[:, 3] / (M_BH / unyt.Solar_Mass) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+Phi_low = (
+    10 ** (raw[:, 5]) / (M_BH / unyt.Solar_Mass) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+)
+Phi_high = (
+    10 ** (raw[:, 4]) / (M_BH / unyt.Solar_Mass) / unyt.Mpc ** 3 * (h_sim / h_obs) ** 3
+)
 
 # Define the scatter as offset from the mean value
 x_scatter = unyt.unyt_array((M_BH - M_BH_low, M_BH_high - M_BH))
@@ -47,7 +55,8 @@ comment = (
     " mentioned inferred black hole mass function estimates, within the error bars."
     " The units of black hole masses are Msol. The units of the black hole mass"
     " function are Mpc^-3 dex^-1 Msol, i.e. this is the black hole mass function"
-    " multiplied by black hole mass. "
+    " multiplied by black hole mass. An h-correction was applied from"
+    f" h=0.7 to a {cosmology.name} cosmology. "
 )
 citation = "Shankar et al. (2009)"
 bibcode = "2009ApJ...690...20S"

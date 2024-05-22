@@ -11,6 +11,7 @@ with open(sys.argv[1], "r") as handle:
     exec(handle.read())
 
 # Cosmology
+h_obs = 0.7
 h_sim = cosmology.h
 
 input_filename = "../raw/Schramm2013.txt"
@@ -27,20 +28,29 @@ log_M_bh = input_file[:, 2]
 log_M_bh_err = input_file[:, 4]
 
 M_bh = unyt.unyt_array(np.power(10.0, log_M_bh), units="Msun")
-M_star = unyt.unyt_array(np.power(10.0, log_M_star), units="Msun")
+M_star = (
+    unyt.unyt_array(np.power(10.0, log_M_star), units="Msun") * (h_sim / h_obs) ** -2
+)
 
 M_bh_lower = np.power(10.0, log_M_bh) - np.power(10.0, log_M_bh - log_M_bh_err)
 M_bh_upper = np.power(10.0, log_M_bh + log_M_bh_err) - np.power(10.0, log_M_bh)
 
-M_star_lower = np.power(10.0, log_M_star) - np.power(10.0, log_M_star - log_M_star_err)
-M_star_upper = np.power(10.0, log_M_star + log_M_star_err) - np.power(10.0, log_M_star)
+M_star_lower = (
+    np.power(10.0, log_M_star)
+    - np.power(10.0, log_M_star - log_M_star_err) * (h_sim / h_obs) ** -2
+)
+M_star_upper = (
+    np.power(10.0, log_M_star + log_M_star_err)
+    - np.power(10.0, log_M_star) * (h_sim / h_obs) ** -2
+)
 
 if not os.path.exists(output_directory):
     os.mkdir(output_directory)
 
 comment = (
     f"A (black hole mass)-(galaxy stellar mass) relation based on observed "
-    f"AGN with broad lines."
+    f"AGN with broad lines. An h-correction was applied from"
+    f" h=0.7 to a {cosmology.name} cosmology."
 )
 citation = f"Schramm et al. (2013) (BL-AGN)"
 bibcode = "2013ApJ...767...13S"
